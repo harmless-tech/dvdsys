@@ -1,0 +1,26 @@
+[package]
+name = "dvdsys"
+version = "0.0.1"
+edition = "2021"
+authors = ["harmless-tech"]
+description = "A cmd line tool to make it easy to create linux docker images and container to use"
+readme = "README.md"
+#homepage = ""
+repository = "https://github.com/harmless-tech/dvdsys"
+license = "MIT"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+clap = { version = "3.2.20", features = ["derive"] }
+colored = "2.0.0"
+dialoguer = "0.10.2"
+indicatif = "0.17.0"
+rayon = "1.5.3"
+serde_json = "1.0.85"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true
