@@ -19,7 +19,7 @@ jobs:
         components: |
           rustfmt
     - name: Rustfmt Check
-      uses: actions-rust-lang/rustfmt@v1
+      run: cargo +nightly fmt --check
 
   build-linux:
     runs-on: ubuntu-latest
