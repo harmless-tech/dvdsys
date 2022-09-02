@@ -1,0 +1,86 @@
+name: Rust Build and Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  fmt-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: nightly
+          components: |
+            rustfmt
+      - name: Rustfmt Check
+        run: cargo +nightly fmt --check
+
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          components: |
+            clippy
+      - name: Clippy Lints
+        run: cargo clippy --all-targets --all-features --verbose --workspace -- -D warnings
+      - name: Run tests
+        run: cargo test --verbose --workspace --all-features
+      - name: Build
+        run: cargo build --verbose --workspace
+      - name: Artifact Upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: artifacts-lin
+          path: |
+            target/debug/dvdsys
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          components: |
+            clippy
+      - name: Clippy Lints
+        run: cargo clippy --all-targets --all-features --verbose --workspace -- -D warnings
+      - name: Run tests
+        run: cargo test --verbose --workspace --all-features
+      - name: Build
+        run: cargo build --verbose --workspace
+      - name: Artifact Upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: artifacts-mac
+          path: |
+            target/debug/dvdsys
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          components: |
+            clippy
+      - name: Clippy Lints
+        run: cargo clippy --all-targets --all-features --verbose --workspace -- -D warnings
+      - name: Run tests
+        run: cargo test --verbose --workspace --all-features
+      - name: Build
+        run: cargo build --verbose --workspace
+      - name: Artifact Upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: artifacts-win
+          path: |
+            target/debug/dvdsys.exe
